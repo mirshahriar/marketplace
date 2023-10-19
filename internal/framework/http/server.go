@@ -14,7 +14,8 @@ import (
 type Adapter struct {
 	config config.AppConfig
 	// Echo is the HTTP server.
-	echo *echo.Echo
+	echo   *echo.Echo
+	binder echo.DefaultBinder
 	// APIPort is the port to the application's business logic.
 	api ports.APIPort
 }
@@ -34,10 +35,15 @@ func (a Adapter) Run() {
 	a.registerAPI()
 
 	a.echo.GET("/swagger/*", echoSwagger.WrapHandler)
-	a.echo.Logger.Fatal(a.echo.Start(":7373"))
+	a.echo.Logger.Fatal(a.echo.Start(":8080"))
 }
 
 func (a Adapter) registerAPI() {
-	group := a.echo.Group("/api/v1")
-	_ = group
+	group := a.echo.Group("")
+
+	group.GET("/products", a.ListProduct)
+	group.POST("/products", a.CreateProduct)
+	group.GET("/products/:product", a.GetProduct)
+	group.PUT("/products/:product", a.UpdateProduct)
+	group.DELETE("/products/:product", a.DeleteProduct)
 }

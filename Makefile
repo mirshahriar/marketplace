@@ -94,17 +94,17 @@ check: govet lint goformat goimports
 	@echo Checking for style guide compliance
 
 docker:
-	@if [ -z $$(docker ps -q -f name=mysql) ]; then \
+	@if [ -z $$(docker ps -q -f name=marketplace-mysql) ]; then \
 		echo "Creating docker container..."; \
-		docker rm -f mysql; \
-		docker run -p 3306:3306 -e MYSQL_ROOT_PASSWORD=test -d --name mysql mysql:8.0 --default-authentication-plugin=mysql_native_password; \
+		docker rm -f marketplace-mysql; \
+		docker run -p 3306:3306 -e MYSQL_ROOT_PASSWORD=test -d --name marketplace-mysql mysql:8.0 --default-authentication-plugin=mysql_native_password; \
 		echo "Waiting for container to start..."; \
-		until docker exec mysql mysqladmin ping -uroot -ptest --silent; do sleep 1; done; \
+		until docker exec marketplace-mysql mysqladmin ping -uroot -ptest --silent; do sleep 1; done; \
 		echo "Creating database 'product'..."; \
-		sleep 10; \
-		docker exec mysql mysql -uroot -ptest -e "CREATE DATABASE IF NOT EXISTS product"; \
+		sleep 20; \
+		docker exec marketplace-mysql mysql -uroot -ptest -e "CREATE DATABASE IF NOT EXISTS marketplace"; \
     else \
-		echo "Docker container 'mysql' is already running."; \
+		echo "Docker container 'marketplace-mysql' is already running."; \
     fi
 
 godoc: $(GODOC)

@@ -43,9 +43,10 @@ var defaultConfig = `
 {
    "app":{
       "app_key":"fake",
+      "pagination_size":10
    },
    "mysql":{
-      "name":"product",
+      "name":"marketplace",
       "host":"localhost",
       "port":"3306",
       "user":"root",

@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/mirshahriar/marketplace/internal/ports/types"
+
 	"github.com/mirshahriar/marketplace/config"
 	"github.com/mirshahriar/marketplace/helper/errors"
 	"github.com/mirshahriar/marketplace/internal/ports"
@@ -63,9 +65,9 @@ func newAdapterWithDialector(dialect gorm.Dialector) (*Adapter, errors.Error) {
 		db: d,
 	}
 
-	//if cErr := adapter.migrate(); cErr != nil {
-	//	return nil, cErr
-	//}
+	if cErr := adapter.migrate(); cErr != nil {
+		return nil, cErr
+	}
 
 	createCallback := d.Callback().Create()
 	createCallback.Clauses = []string{"INSERT", "VALUES"}
@@ -78,7 +80,9 @@ func (a Adapter) migrate() errors.Error {
 	db := a.db.Session(&gorm.Session{
 		Logger: logger.Default.LogMode(logger.Error)})
 
-	tables := []interface{}{}
+	tables := []interface{}{
+		&types.Product{},
+	}
 
 	for _, table := range tables {
 		if !db.Migrator().HasTable(table) {
