@@ -1,0 +1,213 @@
+basePath: /
+definitions:
+  errors.CustomError:
+    properties:
+      details:
+        description: Details is the error details for debugging
+      message:
+        description: Message is the error message to display
+        type: string
+    type: object
+  types.Page-types_ProductResponse:
+    properties:
+      data:
+        description: Data holds the original response list
+        items:
+          properties:
+            createdAt:
+              type: string
+            description:
+              type: string
+            id:
+              type: integer
+            name:
+              type: string
+            price:
+              type: number
+            updatedAt:
+              type: string
+          type: object
+        type: array
+      page:
+        description: Page represents the current page
+        type: integer
+      size:
+        description: Size represents the number of items in a page
+        type: integer
+      total:
+        description: Total represents the total number of items in the DB
+        type: integer
+    type: object
+  types.ProductBody:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+    type: object
+  types.ProductResponse:
+    properties:
+      createdAt:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      price:
+        type: number
+      updatedAt:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    name: API Support
+  description: API Documentation for Marketplace
+  title: Marketplace
+  version: "1.0"
+paths:
+  /products:
+    get:
+      description: Lists all products
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Page size
+        in: query
+        name: size
+        type: integer
+      - description: Sort by
+        in: query
+        name: sort_by
+        type: string
+      - description: Order by
+        in: query
+        name: sort_direction
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Page-types_ProductResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.CustomError'
+      summary: Lists all products
+      tags:
+      - product
+    post:
+      consumes:
+      - application/json
+      description: Creates a product with valid data
+      parameters:
+      - description: Request body of Product
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/types.ProductBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.ProductResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.CustomError'
+      summary: Creates a product
+      tags:
+      - product
+  /products/{product}:
+    delete:
+      description: Deletes a product by ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: product
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.CustomError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errors.CustomError'
+      summary: Deletes a product by ID
+      tags:
+      - product
+    get:
+      description: Gets a product by ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: product
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.ProductResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.CustomError'
+      summary: Gets a product by ID
+      tags:
+      - product
+    put:
+      consumes:
+      - application/json
+      description: Updates a product by ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: product
+        required: true
+        type: integer
+      - description: Request body of Product
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/types.ProductBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.CustomError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errors.CustomError'
+      summary: Updates a product by ID
+      tags:
+      - product
+schemes:
+- http
+swagger: "2.0"

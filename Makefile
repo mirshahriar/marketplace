@@ -19,7 +19,11 @@ GOLANGCILINT_VER := v1.53.1
 GOLANGCILINT_BIN := golangci-lint
 GOLANGCILINT := $(TOOLS_BIN_DIR)/$(GOLANGCILINT_BIN)
 
-.PHONY: all dep test build check goimports goformat prepare docker
+SWAG_VER := v1.8.4
+SWAG_BIN = swag
+SWAG := $(TOOLS_BIN_DIR)/$(SWAG_BIN)
+
+.PHONY: all dep test build check goimports goformat prepare docker swag
 
 all: build
 
@@ -107,10 +111,13 @@ docker:
 		echo "Docker container 'marketplace-mysql' is already running."; \
     fi
 
+swag: $(SWAG)
+	${SWAG} init -g cmd/run.go --parseDependency
+
+
 godoc: $(GODOC)
 
-
-prepare: dep check godoc
+prepare: dep check godoc swag
 
 $(GOIMPORTS): ## Build goimports.
 	GOBIN=$(TOOLS_BIN_DIR) $(GO_INSTALL) golang.org/x/tools/cmd/goimports $(GOIMPORTS_BIN) $(GOIMPORTS_VER)
@@ -120,3 +127,6 @@ $(GOLANGCILINT): ## Build golangci-lint
 
 $(GODOC): ## Build godoc.
 	GOBIN=$(TOOLS_BIN_DIR) $(GO_INSTALL) github.com/princjef/gomarkdoc/cmd/gomarkdoc $(GODOC_BIN) $(GODOC_VER)
+
+$(SWAG): ## Build swag
+	GOBIN=$(TOOLS_BIN_DIR) $(GO_INSTALL) github.com/swaggo/swag/cmd/swag $(SWAG_BIN) $(SWAG_VER)

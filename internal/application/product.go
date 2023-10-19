@@ -1,8 +1,6 @@
 package app
 
 import (
-	"fmt"
-
 	"github.com/mirshahriar/marketplace/helper/errors"
 	"github.com/mirshahriar/marketplace/internal/ports/types"
 )
@@ -32,11 +30,8 @@ func (a Adapter) ListProduct(page types.PageReq, sort types.SortReq) (types.Page
 		return types.Page[types.ProductResponse]{}, err
 	}
 
-	fmt.Println("--------++++", len(resp), total)
-
 	return types.Page[types.ProductResponse]{
 		Data:  resp,
-		Sort:  sort,
 		Page:  page.Page,
 		Size:  len(resp),
 		Total: total,

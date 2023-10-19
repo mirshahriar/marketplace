@@ -10,8 +10,6 @@ import (
 type Page[T any] struct {
 	// Data holds the original response list
 	Data []T `json:"data"`
-	// Sort represents the applied sorting
-	Sort SortReq `json:"sort"`
 	// Page represents the current page
 	Page int `json:"page,omitempty"`
 	// Size represents the number of items in a page

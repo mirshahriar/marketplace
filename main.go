@@ -3,6 +3,7 @@ package main
 
 import (
 	"github.com/mirshahriar/marketplace/cmd"
+	_ "github.com/mirshahriar/marketplace/docs"
 	_ "github.com/spf13/viper/remote"
 )
 

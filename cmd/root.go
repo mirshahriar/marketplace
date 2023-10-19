@@ -9,8 +9,8 @@ import (
 
 var rootCmd = &cobra.Command{
 	Use:   "run",
-	Short: "run product management application",
-	Long:  "this is an application to manage products",
+	Short: "run marketplace application",
+	Long:  "this is an application to manage marketplace",
 }
 
 func Execute() {
