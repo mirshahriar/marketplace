@@ -5,7 +5,7 @@ FROM ${DOCKER_BUILD_IMAGE} AS build
 
 RUN apt-get update -yq
 
-WORKDIR /github.com/mirshahriar/marketplace
+WORKDIR /mirshahriar
 
 COPY ./ ./
 
@@ -14,11 +14,10 @@ RUN make build
 FROM ${DOCKER_BASE_IMAGE} AS final
 
 RUN apk update && apk add ca-certificates
-RUN apk add --no-cache tzdata
 
-COPY --from=build /github.com/mirshahriar/marketplace/binary/github.com/mirshahriar/marketplace /bin/github.com/mirshahriar/marketplace
+COPY --from=build /mirshahriar/binary/marketplace /bin/marketplace
 
-WORKDIR /github.com/mirshahriar/marketplace
+WORKDIR /marketplace
 
 EXPOSE 8080
 ENTRYPOINT ["run"]

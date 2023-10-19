@@ -43,7 +43,7 @@ dep: ## Get the dependencies
 	@go mod tidy
 
 build: ## Build the binary file
-	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 $(GO) build -a -installsuffix cgo -o binary/product-management  .
+	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 $(GO) build -a -installsuffix cgo -o binary/marketplace  .
 
 clean: ## Remove previous build
 	@rm -f ${DB_LIST}
