@@ -3,6 +3,8 @@
 package http
 
 import (
+	"net/http"
+
 	"github.com/labstack/echo/v4"
 	"github.com/mirshahriar/marketplace/helper/errors"
 	"github.com/mirshahriar/marketplace/internal/ports/types"
@@ -24,20 +26,19 @@ func (a Adapter) CreateProduct(c echo.Context) error {
 
 	if err := c.Bind(&body); err != nil {
 		cErr := errors.InvalidRequestParsingError(err)
-		return c.JSON(cErr.Status(), cErr)
+		return c.JSONPretty(cErr.Status(), cErr, " ")
 	}
 
 	if cErr := types.Validate(&body, c.Request().Method); cErr != nil {
-		return c.JSON(cErr.Status(), cErr)
+		return c.JSONPretty(cErr.Status(), cErr, " ")
 	}
 
 	resp, cErr := a.api.CreateProduct(body)
 	if cErr != nil {
-		return c.JSON(cErr.Status(), cErr)
+		return c.JSONPretty(cErr.Status(), cErr, " ")
 	}
 
-	return c.JSON(200, resp)
-
+	return c.JSONPretty(http.StatusOK, resp, " ")
 }
 
 // ListProduct lists all products
@@ -63,15 +64,15 @@ func (a Adapter) ListProduct(c echo.Context) error {
 
 	if err := a.binder.BindQueryParams(c, &params); err != nil {
 		cErr := errors.InvalidRequestParsingError(err)
-		return c.JSON(cErr.Status(), cErr)
+		return c.JSONPretty(cErr.Status(), cErr, " ")
 	}
 
 	resp, cErr := a.api.ListProduct(params.PageReq, params.SortReq)
 	if cErr != nil {
-		return c.JSON(cErr.Status(), cErr)
+		return c.JSONPretty(cErr.Status(), cErr, " ")
 	}
 
-	return c.JSON(200, resp)
+	return c.JSONPretty(http.StatusOK, resp, " ")
 }
 
 // GetProduct gets a product by ID
@@ -90,15 +91,15 @@ func (a Adapter) GetProduct(c echo.Context) error {
 
 	if err := a.binder.BindPathParams(c, &param); err != nil {
 		cErr := errors.InvalidRequestParsingError(err)
-		return c.JSON(cErr.Status(), cErr)
+		return c.JSONPretty(cErr.Status(), cErr, " ")
 	}
 
 	resp, cErr := a.api.GetProductByID(param.ProductID)
 	if cErr != nil {
-		return c.JSON(cErr.Status(), cErr)
+		return c.JSONPretty(cErr.Status(), cErr, " ")
 	}
 
-	return c.JSON(200, resp)
+	return c.JSONPretty(http.StatusOK, resp, " ")
 }
 
 // UpdateProduct updates a product by ID
@@ -121,7 +122,7 @@ func (a Adapter) UpdateProduct(c echo.Context) error {
 
 	if err := c.Bind(&params); err != nil {
 		cErr := errors.InvalidRequestParsingError(err)
-		return c.JSON(cErr.Status(), cErr)
+		return c.JSONPretty(cErr.Status(), cErr, " ")
 	}
 
 	if cErr := types.Validate(&params.ProductBody, c.Request().Method); cErr != nil {
@@ -130,7 +131,7 @@ func (a Adapter) UpdateProduct(c echo.Context) error {
 
 	cErr := a.api.UpdateProduct(params.ProductID, params.ProductBody)
 	if cErr != nil {
-		return c.JSON(cErr.Status(), cErr)
+		return c.JSONPretty(cErr.Status(), cErr, " ")
 	}
 
 	return c.NoContent(200)
@@ -153,12 +154,12 @@ func (a Adapter) DeleteProduct(c echo.Context) error {
 
 	if err := a.binder.BindPathParams(c, &param); err != nil {
 		cErr := errors.InvalidRequestParsingError(err)
-		return c.JSON(cErr.Status(), cErr)
+		return c.JSONPretty(cErr.Status(), cErr, " ")
 	}
 
 	cErr := a.api.DeleteProduct(param.ProductID)
 	if cErr != nil {
-		return c.JSON(cErr.Status(), cErr)
+		return c.JSONPretty(cErr.Status(), cErr, " ")
 	}
 
 	return c.NoContent(200)
