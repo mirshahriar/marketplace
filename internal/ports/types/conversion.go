@@ -2,6 +2,7 @@ package types
 
 import "github.com/fatih/structs"
 
+// ToProduct converts ProductBody (request) to Product (model)
 func (p ProductBody) ToProduct() Product {
 	return Product{
 		Name:        p.Name,
@@ -10,6 +11,7 @@ func (p ProductBody) ToProduct() Product {
 	}
 }
 
+// ToProductResponse converts Product (model) to ProductResponse (response)
 func (p Product) ToProductResponse() ProductResponse {
 	return ProductResponse{
 		ID: p.ID,
@@ -23,6 +25,7 @@ func (p Product) ToProductResponse() ProductResponse {
 	}
 }
 
+// ToMap converts ProductBody (request) to map[string]interface{} (used for gorm update)
 func (p ProductBody) ToMap() map[string]interface{} {
 	return structs.Map(p)
 }

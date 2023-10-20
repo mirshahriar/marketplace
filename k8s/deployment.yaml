@@ -4,7 +4,7 @@ metadata:
   labels:
     app: product-management
   name: server
-  namespace: github.com/mirshahriar/marketplace
+  namespace: marketplace
 spec:
   replicas: 1
   selector:
@@ -16,7 +16,7 @@ spec:
         app: product-management
     spec:
       containers:
-        - image: mirshahriar/github.com/mirshahriar/marketplace:latest
+        - image: mirshahriar/marketplace:latest
           imagePullPolicy: Always
           name: server
           ports:

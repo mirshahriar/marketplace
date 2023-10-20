@@ -6,6 +6,7 @@ type SystemConfig struct {
 	Value string `json:"value"`
 }
 
+// TableName returns the table name for the SystemConfig model
 func (SystemConfig) TableName() string {
 	return "system_config"
 }

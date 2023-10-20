@@ -14,7 +14,8 @@ import (
 type Adapter struct {
 	config config.AppConfig
 	// Echo is the HTTP server.
-	echo   *echo.Echo
+	echo *echo.Echo
+	// Binder is the default binder for the HTTP server.
 	binder echo.DefaultBinder
 	// APIPort is the port to the application's business logic.
 	api ports.APIPort
@@ -39,11 +40,14 @@ func (a Adapter) Run() {
 }
 
 func (a Adapter) registerAPI() {
-	group := a.echo.Group("")
+	// Registering the routes those are accessible without authentication.
+	unAuthGroup := a.echo.Group("")
+	unAuthGroup.GET("/products", a.ListProduct)
+	unAuthGroup.GET("/products/:product", a.GetProduct)
 
-	group.GET("/products", a.ListProduct)
-	group.POST("/products", a.CreateProduct)
-	group.GET("/products/:product", a.GetProduct)
-	group.PUT("/products/:product", a.UpdateProduct)
-	group.DELETE("/products/:product", a.DeleteProduct)
+	// Registering the routes those are accessible with authentication.
+	authGroup := a.echo.Group("", middlewares.AuthorizeUser(a.api))
+	authGroup.POST("/products", a.CreateProduct)
+	authGroup.PUT("/products/:product", a.UpdateProduct)
+	authGroup.DELETE("/products/:product", a.DeleteProduct)
 }

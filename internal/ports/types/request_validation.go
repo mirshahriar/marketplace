@@ -4,6 +4,7 @@ import (
 	"github.com/gookit/validate"
 )
 
+// ConfigValidation is used to validate the request body
 func (ProductBody) ConfigValidation(v *validate.Validation) {
 	v.StringRules(validate.MS{
 		"Name":        "required|maxLen:100",

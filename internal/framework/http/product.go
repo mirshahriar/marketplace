@@ -16,9 +16,11 @@ import (
 // @Tags	product
 // @Accept	json
 // @Produce	json
+// @param Authorization header string true "Authorization"
 // @Param	product	body	types.ProductBody	true	"Request body of Product"
 // @Success	200	{object}	types.ProductResponse
 // @Failure	400	{object}	errors.CustomError
+// @Failure	403	{object}	errors.CustomError
 // @Router	/products [POST]
 func (a Adapter) CreateProduct(c echo.Context) error {
 
@@ -29,10 +31,12 @@ func (a Adapter) CreateProduct(c echo.Context) error {
 		return c.JSONPretty(cErr.Status(), cErr, " ")
 	}
 
+	// Validating the request body.
 	if cErr := types.Validate(&body, c.Request().Method); cErr != nil {
 		return c.JSONPretty(cErr.Status(), cErr, " ")
 	}
 
+	// Creating the product and returning the response.
 	resp, cErr := a.api.CreateProduct(body)
 	if cErr != nil {
 		return c.JSONPretty(cErr.Status(), cErr, " ")
@@ -58,6 +62,7 @@ func (a Adapter) ListProduct(c echo.Context) error {
 		types.PageReq
 		types.SortReq
 	}{
+		// Setting the default page size.
 		PageReq: types.NewPageReq(a.config.PaginationSize),
 		SortReq: types.NewSortReq(),
 	}
@@ -67,6 +72,7 @@ func (a Adapter) ListProduct(c echo.Context) error {
 		return c.JSONPretty(cErr.Status(), cErr, " ")
 	}
 
+	// Listing the products and returning the response.
 	resp, cErr := a.api.ListProduct(params.PageReq, params.SortReq)
 	if cErr != nil {
 		return c.JSONPretty(cErr.Status(), cErr, " ")
@@ -94,7 +100,8 @@ func (a Adapter) GetProduct(c echo.Context) error {
 		return c.JSONPretty(cErr.Status(), cErr, " ")
 	}
 
-	resp, cErr := a.api.GetProductByID(param.ProductID)
+	// Getting the product by its ID and returning the response.
+	resp, cErr := a.api.GetProduct(param.ProductID)
 	if cErr != nil {
 		return c.JSONPretty(cErr.Status(), cErr, " ")
 	}
@@ -110,8 +117,10 @@ func (a Adapter) GetProduct(c echo.Context) error {
 // @Produce	json
 // @Param	product	path	int	true	"Product ID"
 // @Param	product	body	types.ProductBody	true	"Request body of Product"
+// @param Authorization header string true "Authorization"
 // @Success	200
 // @Failure	400	{object}	errors.CustomError
+// @Failure	403	{object}	errors.CustomError
 // @Failure	404	{object}	errors.CustomError
 // @Router	/products/{product} [PUT]
 func (a Adapter) UpdateProduct(c echo.Context) error {
@@ -134,7 +143,7 @@ func (a Adapter) UpdateProduct(c echo.Context) error {
 		return c.JSONPretty(cErr.Status(), cErr, " ")
 	}
 
-	return c.NoContent(200)
+	return c.NoContent(http.StatusOK)
 }
 
 // DeleteProduct deletes a product by ID
@@ -143,8 +152,10 @@ func (a Adapter) UpdateProduct(c echo.Context) error {
 // @Tags	product
 // @Produce	json
 // @Param	product	path	int	true	"Product ID"
+// @param Authorization header string true "Authorization"
 // @Success	200
 // @Failure	400	{object}	errors.CustomError
+// @Failure	403	{object}	errors.CustomError
 // @Failure	404	{object}	errors.CustomError
 // @Router	/products/{product} [DELETE]
 func (a Adapter) DeleteProduct(c echo.Context) error {
@@ -157,10 +168,11 @@ func (a Adapter) DeleteProduct(c echo.Context) error {
 		return c.JSONPretty(cErr.Status(), cErr, " ")
 	}
 
+	// Deleting the product by its ID.
 	cErr := a.api.DeleteProduct(param.ProductID)
 	if cErr != nil {
 		return c.JSONPretty(cErr.Status(), cErr, " ")
 	}
 
-	return c.NoContent(200)
+	return c.NoContent(http.StatusOK)
 }

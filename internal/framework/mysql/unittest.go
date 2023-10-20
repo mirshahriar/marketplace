@@ -15,6 +15,7 @@ func NewAdapterForTest(t *testing.T) (*Adapter, error) {
 
 	name := fmt.Sprintf("gorm_%s.db", strings.ToLower(t.Name()))
 
+	// Cleanup the sqlite file after the test
 	t.Cleanup(func() {
 		_ = os.Remove(name)
 	})
@@ -28,6 +29,7 @@ func NewAdapterForTest(t *testing.T) (*Adapter, error) {
 		db: db,
 	}
 
+	// Enable parallel testing
 	t.Parallel()
 
 	// Migrate the schema

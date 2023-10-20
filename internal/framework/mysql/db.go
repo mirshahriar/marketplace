@@ -5,11 +5,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/mirshahriar/marketplace/internal/ports/types"
-
 	"github.com/mirshahriar/marketplace/config"
 	"github.com/mirshahriar/marketplace/helper/errors"
 	"github.com/mirshahriar/marketplace/internal/ports"
+	"github.com/mirshahriar/marketplace/internal/ports/types"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -18,14 +17,15 @@ import (
 
 // Adapter implements ports.DBPort with mysql
 type Adapter struct {
-	db *gorm.DB
+	appConfig config.AppConfig
+	db        *gorm.DB
 }
 
 // This validates that Adapter implements the ports.DBPort interface
 var _ ports.DBPort = Adapter{}
 
 // NewAdapterWithConfig creates a new adapter with the given config
-func NewAdapterWithConfig(cfg config.DBConfig) (*Adapter, errors.Error) {
+func NewAdapterWithConfig(appConfig config.AppConfig, cfg config.DBConfig) (*Adapter, errors.Error) {
 	var adapter *Adapter
 	var cErr errors.Error
 
@@ -46,6 +46,7 @@ func NewAdapterWithConfig(cfg config.DBConfig) (*Adapter, errors.Error) {
 	sqlDB.SetMaxIdleConns(cfg.MaxIdleConn)
 	sqlDB.SetMaxOpenConns(cfg.MaxOpenConn)
 
+	adapter.appConfig = appConfig
 	return adapter, nil
 }
 
@@ -65,10 +66,11 @@ func newAdapterWithDialector(dialect gorm.Dialector) (*Adapter, errors.Error) {
 		db: d,
 	}
 
-	if cErr := adapter.migrate(); cErr != nil {
-		return nil, cErr
-	}
+	//if cErr := adapter.migrate(); cErr != nil {
+	//	return nil, cErr
+	//}
 
+	// This one is used to override ON CONFLICT clause
 	createCallback := d.Callback().Create()
 	createCallback.Clauses = []string{"INSERT", "VALUES"}
 
@@ -82,6 +84,8 @@ func (a Adapter) migrate() errors.Error {
 
 	tables := []interface{}{
 		&types.Product{},
+		&types.User{},
+		&types.Token{},
 	}
 
 	for _, table := range tables {

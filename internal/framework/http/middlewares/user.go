@@ -5,21 +5,25 @@ package middlewares
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/mirshahriar/marketplace/internal/ports"
 )
 
-func authorizeUser(config localConfig) echo.MiddlewareFunc {
-	if config.Skipper == nil {
-		config.Skipper = middleware.DefaultSkipper
-	}
-
-	// var binder echo.DefaultBinder
-	return func(next echo.HandlerFunc) echo.HandlerFunc {
-		return func(c echo.Context) error {
-			if config.Skipper(c) {
-				return next(c)
-			}
-
-			return next(c)
+// AuthorizeUser is the middleware for authorizing a user
+func AuthorizeUser(adapter ports.APIPort) echo.MiddlewareFunc {
+	return middleware.KeyAuth(func(key string, c echo.Context) (bool, error) {
+		// TODO: Add caching here
+		user, found, cErr := adapter.GetUserByToken(key)
+		if cErr != nil {
+			return false, cErr
 		}
-	}
+
+		if !found {
+			return false, nil
+		}
+
+		// Setting the user in the context
+		c.Set("user", user)
+
+		return true, nil
+	})
 }

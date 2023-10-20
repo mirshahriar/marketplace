@@ -2,13 +2,13 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: migration
-  namespace: github.com/mirshahriar/marketplace
+  namespace: marketplace
 spec:
   template:
     spec:
       containers:
         - name: migration
-          image: mirshahriar/github.com/mirshahriar/marketplace:latest
+          image: mirshahriar/marketplace:latest
           imagePullPolicy: Always
           args:
             - "migrate"

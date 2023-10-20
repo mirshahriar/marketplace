@@ -23,12 +23,15 @@ SWAG_VER := v1.8.4
 SWAG_BIN = swag
 SWAG := $(TOOLS_BIN_DIR)/$(SWAG_BIN)
 
-.PHONY: all dep test build check goimports goformat prepare docker swag
+.PHONY: all dep test build check goimports goformat prepare docker swag fake-user
 
 all: build
 
 migrate:
 	@go run main.go migrate
+
+fake-user:
+	@go run main.go migrate --add-fake-user
 
 run:
 	@go run main.go serve
@@ -104,7 +107,7 @@ docker:
 		docker run -p 3306:3306 -e MYSQL_ROOT_PASSWORD=test -d --name marketplace-mysql mysql:8.0 --default-authentication-plugin=mysql_native_password; \
 		echo "Waiting for container to start..."; \
 		until docker exec marketplace-mysql mysqladmin ping -uroot -ptest --silent; do sleep 1; done; \
-		echo "Creating database 'product'..."; \
+		echo "Creating database 'marketplace'..."; \
 		sleep 20; \
 		docker exec marketplace-mysql mysql -uroot -ptest -e "CREATE DATABASE IF NOT EXISTS marketplace"; \
     else \
@@ -116,6 +119,8 @@ swag: $(SWAG)
 
 
 godoc: $(GODOC)
+	${GODOC} ./internal/ports/types  -o docs/guide/types.md --repository.default-branch main
+	${GODOC} ./internal/ports  -o docs/guide/ports.md --repository.default-branch main
 
 prepare: dep check godoc swag
 

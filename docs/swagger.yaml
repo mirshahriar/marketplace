@@ -15,16 +15,28 @@ definitions:
         items:
           properties:
             createdAt:
+              description: CreatedAt is the time when the product was created
               type: string
             description:
+              description: |-
+                Description is the description of the product. Max length is 200.
+                +required
               type: string
             id:
+              description: ID represents the product id
               type: integer
             name:
+              description: |-
+                Name is the name of the product. Max length is 100.
+                +required
               type: string
             price:
+              description: |-
+                Price is the price of the product. Must be positive number.
+                +required
               type: number
             updatedAt:
+              description: UpdatedAt is the time when the product was updated
               type: string
           type: object
         type: array
@@ -41,25 +53,46 @@ definitions:
   types.ProductBody:
     properties:
       description:
+        description: |-
+          Description is the description of the product. Max length is 200.
+          +required
         type: string
       name:
+        description: |-
+          Name is the name of the product. Max length is 100.
+          +required
         type: string
       price:
+        description: |-
+          Price is the price of the product. Must be positive number.
+          +required
         type: number
     type: object
   types.ProductResponse:
     properties:
       createdAt:
+        description: CreatedAt is the time when the product was created
         type: string
       description:
+        description: |-
+          Description is the description of the product. Max length is 200.
+          +required
         type: string
       id:
+        description: ID represents the product id
         type: integer
       name:
+        description: |-
+          Name is the name of the product. Max length is 100.
+          +required
         type: string
       price:
+        description: |-
+          Price is the price of the product. Must be positive number.
+          +required
         type: number
       updatedAt:
+        description: UpdatedAt is the time when the product was updated
         type: string
     type: object
 host: localhost:8080
@@ -109,6 +142,11 @@ paths:
       - application/json
       description: Creates a product with valid data
       parameters:
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: Request body of Product
         in: body
         name: product
@@ -126,6 +164,10 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/errors.CustomError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errors.CustomError'
       summary: Creates a product
       tags:
       - product
@@ -138,6 +180,11 @@ paths:
         name: product
         required: true
         type: integer
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -145,6 +192,10 @@ paths:
           description: OK
         "400":
           description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.CustomError'
+        "403":
+          description: Forbidden
           schema:
             $ref: '#/definitions/errors.CustomError'
         "404":
@@ -192,6 +243,11 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/types.ProductBody'
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -199,6 +255,10 @@ paths:
           description: OK
         "400":
           description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.CustomError'
+        "403":
+          description: Forbidden
           schema:
             $ref: '#/definitions/errors.CustomError'
         "404":

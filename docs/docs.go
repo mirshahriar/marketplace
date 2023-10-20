@@ -83,6 +83,13 @@ const docTemplate = `{
                 "summary": "Creates a product",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "Request body of Product",
                         "name": "product",
                         "in": "body",
@@ -101,6 +108,12 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errors.CustomError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
                         "schema": {
                             "$ref": "#/definitions/errors.CustomError"
                         }
@@ -170,6 +183,13 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/types.ProductBody"
                         }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -178,6 +198,12 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errors.CustomError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
                         "schema": {
                             "$ref": "#/definitions/errors.CustomError"
                         }
@@ -206,6 +232,13 @@ const docTemplate = `{
                         "name": "product",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -214,6 +247,12 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errors.CustomError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
                         "schema": {
                             "$ref": "#/definitions/errors.CustomError"
                         }
@@ -251,21 +290,27 @@ const docTemplate = `{
                         "type": "object",
                         "properties": {
                             "createdAt": {
+                                "description": "CreatedAt is the time when the product was created",
                                 "type": "string"
                             },
                             "description": {
+                                "description": "Description is the description of the product. Max length is 200.\n+required",
                                 "type": "string"
                             },
                             "id": {
+                                "description": "ID represents the product id",
                                 "type": "integer"
                             },
                             "name": {
+                                "description": "Name is the name of the product. Max length is 100.\n+required",
                                 "type": "string"
                             },
                             "price": {
+                                "description": "Price is the price of the product. Must be positive number.\n+required",
                                 "type": "number"
                             },
                             "updatedAt": {
+                                "description": "UpdatedAt is the time when the product was updated",
                                 "type": "string"
                             }
                         }
@@ -289,12 +334,15 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "description": {
+                    "description": "Description is the description of the product. Max length is 200.\n+required",
                     "type": "string"
                 },
                 "name": {
+                    "description": "Name is the name of the product. Max length is 100.\n+required",
                     "type": "string"
                 },
                 "price": {
+                    "description": "Price is the price of the product. Must be positive number.\n+required",
                     "type": "number"
                 }
             }
@@ -303,21 +351,27 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "createdAt": {
+                    "description": "CreatedAt is the time when the product was created",
                     "type": "string"
                 },
                 "description": {
+                    "description": "Description is the description of the product. Max length is 200.\n+required",
                     "type": "string"
                 },
                 "id": {
+                    "description": "ID represents the product id",
                     "type": "integer"
                 },
                 "name": {
+                    "description": "Name is the name of the product. Max length is 100.\n+required",
                     "type": "string"
                 },
                 "price": {
+                    "description": "Price is the price of the product. Must be positive number.\n+required",
                     "type": "number"
                 },
                 "updatedAt": {
+                    "description": "UpdatedAt is the time when the product was updated",
                     "type": "string"
                 }
             }

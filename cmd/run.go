@@ -22,13 +22,13 @@ var runCmd = &cobra.Command{
 	Use:   "serve",
 	Short: "run marketplace server",
 	Run: func(cmd *cobra.Command, args []string) {
+		appConfig := config.GetAppConfig()
+
 		dbConfig := config.GetDBConfig()
-		dbAdapter, err := db.NewAdapterWithConfig(dbConfig)
+		dbAdapter, err := db.NewAdapterWithConfig(appConfig, dbConfig)
 		if err != nil {
 			log.Fatal(err)
 		}
-
-		appConfig := config.GetAppConfig()
 
 		application := app.NewApplication(
 			appConfig,

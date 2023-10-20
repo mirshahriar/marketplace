@@ -5,7 +5,9 @@ import (
 	"github.com/mirshahriar/marketplace/internal/ports/types"
 )
 
+// CreateProduct creates a new product and returns the created product
 func (a Adapter) CreateProduct(body types.ProductBody) (types.ProductResponse, errors.Error) {
+	// InsertProduct inserts a new product into the database
 	product, cErr := a.db.InsertProduct(body.ToProduct())
 	if cErr != nil {
 		return types.ProductResponse{}, cErr
@@ -14,7 +16,9 @@ func (a Adapter) CreateProduct(body types.ProductBody) (types.ProductResponse, e
 	return product.ToProductResponse(), nil
 }
 
+// ListProduct returns a list of products with pagination and sorting
 func (a Adapter) ListProduct(page types.PageReq, sort types.SortReq) (types.Page[types.ProductResponse], errors.Error) {
+	// ListProduct returns a list of products with pagination and sorting from the database
 	products, cErr := a.db.ListProduct(page, sort)
 	if cErr != nil {
 		return types.Page[types.ProductResponse]{}, cErr
@@ -25,6 +29,7 @@ func (a Adapter) ListProduct(page types.PageReq, sort types.SortReq) (types.Page
 		resp = append(resp, product.ToProductResponse())
 	}
 
+	// CountProduct returns the total number of products which is used for pagination
 	total, err := a.db.CountProduct()
 	if err != nil {
 		return types.Page[types.ProductResponse]{}, err
@@ -38,7 +43,8 @@ func (a Adapter) ListProduct(page types.PageReq, sort types.SortReq) (types.Page
 	}, nil
 }
 
-func (a Adapter) GetProductByID(productID uint) (types.ProductResponse, errors.Error) {
+// GetProduct returns a product by its id
+func (a Adapter) GetProduct(productID uint) (types.ProductResponse, errors.Error) {
 	product, cErr := a.db.GetProductByID(productID)
 	if cErr != nil {
 		return types.ProductResponse{}, cErr
@@ -47,12 +53,15 @@ func (a Adapter) GetProductByID(productID uint) (types.ProductResponse, errors.E
 	return product.ToProductResponse(), nil
 }
 
+// UpdateProduct updates a product by its ID
 func (a Adapter) UpdateProduct(productID uint, body types.ProductBody) errors.Error {
+	// First we check if the product exists
 	_, cErr := a.db.GetProductByID(productID)
 	if cErr != nil {
 		return cErr
 	}
 
+	// UpdateProduct updates a product with map[string]interface{}
 	cErr = a.db.UpdateProduct(productID, body.ToMap())
 	if cErr != nil {
 		return cErr
@@ -61,7 +70,9 @@ func (a Adapter) UpdateProduct(productID uint, body types.ProductBody) errors.Er
 	return nil
 }
 
+// DeleteProduct deletes a product by its ID
 func (a Adapter) DeleteProduct(productID uint) errors.Error {
+	// First we check if the product exists
 	_, cErr := a.db.GetProductByID(productID)
 	if cErr != nil {
 		return cErr

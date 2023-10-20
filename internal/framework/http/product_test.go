@@ -239,7 +239,7 @@ func TestAdapter_UpdateProduct(t *testing.T) {
 			} else {
 				Equal(t, http.StatusOK, rec.Code)
 
-				updatedProduct, cErr := appAdapter.GetProductByID(tt.args.productID)
+				updatedProduct, cErr := appAdapter.GetProduct(tt.args.productID)
 				Nil(t, cErr)
 
 				Equal(t, tt.args.body.Name, updatedProduct.Name)
